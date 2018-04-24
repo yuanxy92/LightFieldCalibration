@@ -1,0 +1,3 @@
+[submodule "GenCameraDriver"]
+	path = GenCameraDriver
+	url = https://github.com/yuanxy92/GenCameraDriver
