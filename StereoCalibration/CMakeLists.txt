@@ -41,7 +41,7 @@ set(MY_SOURCE_FILES
     StereoCalibration.cpp
 )
 
-cuda_add_library(${stereo_exe_name}
+cuda_add_executable(${stereo_exe_name}
     ${MY_HEADER_FILES}
     ${MY_SOURCE_FILES}
     main.cpp
