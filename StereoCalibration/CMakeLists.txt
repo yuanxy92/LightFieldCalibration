@@ -1,4 +1,4 @@
-# CMake file for GigaRender Calibrate submodule project
+# CMake file for stereo giga calibration project
 # Author: Shane Yuan
 # E-mail: yuanxy92@gmail.com
 #

@@ -100,4 +100,5 @@ include_directories(${COMMON_DIR})
 
 
 # add sub-directory
+add_subdirectory("SingleCameraCalibration")
 add_subdirectory("StereoCalibration")
