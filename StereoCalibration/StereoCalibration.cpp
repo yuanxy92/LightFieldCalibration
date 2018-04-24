@@ -13,7 +13,7 @@ Online stereo calibration class
 #include <opencv2/core/utility.hpp>
 #include "StereoCalibration.h"
 
-StereoCalibration::StereoCalibration() : chessBoardSize(11, 8) {}
+StereoCalibration::StereoCalibration() : chessBoardSize(11, 8), validFrameInd(0) {}
 StereoCalibration::~StereoCalibration() {}
 
 /**
@@ -30,11 +30,20 @@ int StereoCalibration::init(cv::Mat K1, cv::Mat K2, cv::Size chessBoardSize) {
 	return 0;
 }
 
+// Checks if a matrix is a valid rotation matrix.
+bool isRotationMatrix(cv::Mat &R) {
+	cv::Mat Rt;
+	transpose(R, Rt);
+	cv::Mat shouldBeIdentity = Rt * R;
+	cv::Mat I = cv::Mat::eye(3, 3, shouldBeIdentity.type());
+	return cv::norm(I, shouldBeIdentity) < 1e-6;
+}
+
 // Calculates rotation matrix to euler angles
 // The result is the same as MATLAB except the order
 // of the euler angles ( x and z are swapped ).
 cv::Vec3f rotationMatrixToEulerAngles(cv::Mat &R) {
-	//assert(isRotationMatrix(R));
+	assert(isRotationMatrix(R));
 	float sy = sqrt(R.at<double>(0, 0) * R.at<double>(0, 0) + R.at<double>(1, 0) * R.at<double>(1, 0));
 	bool singular = sy < 1e-6; // If
 	float x, y, z;
@@ -125,10 +134,13 @@ int StereoCalibration::estimate(cv::Mat img1, cv::Mat img2) {
 	smallImg2.copyTo(display(rect));
 	cv::imshow("corners", display);
 	cv::waitKey(5);
+	if (corner1.rows != 88 || corner2.rows != 88) {
+		return -1;
+	}
 	// calculate rotation matrix
 	cv::Mat R, T;
 	cv::Vec3f angles;
-	cv::Mat E = cv::findEssentialMat(corner1, corner2, this->K1, cv::RANSAC);
+	cv::Mat E = cv::findEssentialMat(corner1, corner2, this->K1, 0);
 	cv::recoverPose(E, corner1, corner2, this->K1, R, T);
 	angles = rotationMatrixToEulerAngles(R);
 	system("cls");
@@ -157,6 +169,11 @@ int StereoCalibration::estimate(cv::Mat img1, cv::Mat img2) {
 	tm.stop();
 	std::cout << cv::format("Find corner points, cost %f miliseconds ...", tm.getTimeMilli())
 		<< std::endl;
+
+	cv::imwrite(cv::format("images/0/%05d.png", validFrameInd), img1);
+	cv::imwrite(cv::format("images/1/%05d.png", validFrameInd), img2);
+	validFrameInd++;
+
 	return 0;
 }
 

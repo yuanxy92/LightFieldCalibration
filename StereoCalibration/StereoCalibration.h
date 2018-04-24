@@ -29,6 +29,7 @@ private:
 	cv::Mat corner2;
 	// image for display
 	cv::Mat display;
+	int validFrameInd;
 public:
 
 private:
