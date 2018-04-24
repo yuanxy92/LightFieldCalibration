@@ -27,7 +27,7 @@
 ##               Buddha Bless No Bug
 ##
 
-set(stereo_exe_name "StereoCalibrate")
+set(stereo_exe_name "OnlineCalibrate")
 
 # Camera Driver files
 # camera SDK
