@@ -80,6 +80,7 @@ set(MY_HEADER_FILES
 set(MY_SOURCE_FILES 
 	# C++ code
     StereoCalibration.cpp
+    StereoCalibration.cu
 	${CAMERA_DRIVER_FILE}
 )
 

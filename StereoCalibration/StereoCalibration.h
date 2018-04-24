@@ -53,6 +53,9 @@ public:
 	@return int
 	*/
 	int estimate(cv::Mat img1, cv::Mat img2);
+
+	static cv::cuda::GpuMat applyWhiteBalance(cv::cuda::GpuMat img,
+		float red, float green, float blue);
 };
 
 
