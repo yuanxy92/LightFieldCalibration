@@ -147,10 +147,15 @@ int StereoCalibration::estimate(cv::Mat img1, cv::Mat img2) {
 	SysUtil::infoOutput("Rotation:");
 	for (int row = 0; row < 3; row++) {
 		for (int col = 0; col < 3; col++) {
-			printf("%06.5lf ", R.at<double>(row, col));
+			printf("%06.5lf ", abs(R.at<double>(row, col)));
 		}
 		printf("\n");
 	}
+	SysUtil::infoOutput("Euler Angles:");
+	printf("%06.5lf ", abs(angles.val[0]));
+	printf("%06.5lf ", abs(angles.val[1]));
+	printf("%06.5lf ", abs(angles.val[2]));
+	printf("\n");
 	printf("%06.5lf ", angles.val[0]);
 	printf("%06.5lf ", angles.val[1]);
 	printf("%06.5lf ", angles.val[2]);
@@ -161,10 +166,6 @@ int StereoCalibration::estimate(cv::Mat img1, cv::Mat img2) {
 	printf("%06.5lf ", T.at<double>(0, 2));
 	printf("\n");
 
-	float val = acos((R.at<double>(0, 0) + R.at<double>(1, 1) + R.at<double>(2, 2) - 1) / 2);
-	SysUtil::infoOutput("Angle:");
-	printf("%06.5lf ", val);
-	printf("\n");
 	// end recording time
 	tm.stop();
 	std::cout << cv::format("Find corner points, cost %f miliseconds ...", tm.getTimeMilli())
