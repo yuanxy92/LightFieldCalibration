@@ -11,11 +11,18 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/cudastereo.hpp>
 
-int main(int argc, char* argv[]) {
-	cv::Mat left = cv::imread("00_00000.jpg");
-	cv::Mat right = cv::imread("01_00000.jpg");
+#include "StereoRectify.h"
 
-	cv::Size size(left.cols / 4, left.rows / 4);
+int main(int argc, char* argv[]) {
+	cv::Mat left = cv::imread("E:/data/giga_stereo/data1/seq2/00_00000.jpg");
+	cv::Mat right = cv::imread("E:/data/giga_stereo/data1/seq2/01_00000.jpg");
+	cv::Size imgsize = left.size();
+
+	StereoRectify sr;
+	sr.init("intrinsics.yml", "extrinsics.yml", imgsize);
+	sr.rectify(left, right);
+
+	cv::Size size(left.cols, left.rows);
 
 	cv::resize(left, left, size);
 	cv::resize(right, right, size);
@@ -24,7 +31,7 @@ int main(int argc, char* argv[]) {
 
 	int mindisparity = 0;
 	int ndisparities = 64;
-	int SADWindowSize = 15;
+	int SADWindowSize = 11;
 
 	//SGBM  
 	cv::Ptr<cv::StereoSGBM> sgbm = cv::StereoSGBM::create(mindisparity, ndisparities, SADWindowSize);
@@ -46,6 +53,8 @@ int main(int argc, char* argv[]) {
 	cv::Mat disp8U = cv::Mat(disp.rows, disp.cols, CV_8UC1);
 	normalize(disp, disp8U, 0, 255, cv::NORM_MINMAX, CV_8UC1);
 
-	cv::imwrite("SGBM.jpg", disp8U);
+	cv::imwrite("SGBM.png", disp8U);
+	cv::imwrite("left.png", left);
+	cv::imwrite("right.png", right);
 	return 0;
 }

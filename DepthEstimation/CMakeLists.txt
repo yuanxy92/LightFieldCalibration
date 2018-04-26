@@ -30,6 +30,8 @@
 set(depth_exe_name "DepthEstimation")
 
 add_executable(${depth_exe_name}
+    StereoRectify.h
+    StereoRectify.cpp
     main.cpp
 )
 
