@@ -14,8 +14,8 @@
 #include "StereoRectify.h"
 
 int main(int argc, char* argv[]) {
-	cv::Mat left = cv::imread("E:/data/giga_stereo/data1/seq2/00_00000.jpg");
-	cv::Mat right = cv::imread("E:/data/giga_stereo/data1/seq2/01_00000.jpg");
+	cv::Mat left = cv::imread("00_00000.jpg");
+	cv::Mat right = cv::imread("01_00000.jpg");
 	cv::Size imgsize = left.size();
 
 	StereoRectify sr;

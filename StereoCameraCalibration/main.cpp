@@ -79,6 +79,7 @@ StereoCalib(const vector<string>& imagelist, Size boardSize, float squareSize, b
         for( k = 0; k < 2; k++ )
         {
             const string& filename = imagelist[i*2+k];
+			std::cout << "Read image " << filename << std::endl;
             Mat img = imread(filename, 0);
             if(img.empty())
                 break;

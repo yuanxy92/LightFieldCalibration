@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
 	cameraPtr->startCapture();
 	cameraPtr->setFPS(-1, 10);
 	cameraPtr->setAutoExposure(-1, cam::Status::on);
-	cameraPtr->setAutoExposureLevel(-1, 40);
+	cameraPtr->setAutoExposureLevel(-1, 20);
 	cameraPtr->makeSetEffective();
 	// set capturing setting
 	cameraPtr->setCaptureMode(cam::GenCamCaptureMode::Continous, 200);
@@ -71,6 +71,7 @@ int main(int argc, char* argv[]) {
 
 	SysUtil::sleep(1000);
 	int nframe = 0;
+	cv::Rect rect;
 	for (;;) {
 		std::cout << nframe++ << std::endl;
 		cameraPtr->captureFrame(imgdatas);
@@ -91,8 +92,36 @@ int main(int argc, char* argv[]) {
 
 		imgs_d[0].download(imgs_c[0]);
 		imgs_d[1].download(imgs_c[1]);
-
+#if 0
+		if (nframe == 1) {
+			cv::Mat img;
+			cv::Size sizeSmall(imgs_c[0].cols / 4, imgs_c[0].rows / 4);
+			cv::resize(imgs_c[0], img, sizeSmall);
+			rect = cv::selectROI(img, true);
+			rect.x *= 4;
+			rect.y *= 4;
+			rect.width *= 4;
+			rect.height *= 4;
+		}
+		else {
+			cv::Mat img1, img2;
+			imgs_c[0](rect).copyTo(img1);
+			imgs_c[1](rect).copyTo(img2);
+			cv::Mat showImg(img1.rows, img1.cols * 2, CV_8UC3);
+			cv::Rect rect2(0, 0, img1.cols, img1.rows);
+			img1.copyTo(showImg(rect2));
+			rect2.x += img1.cols;
+			img2.copyTo(showImg(rect2));
+			cv::imshow("calib", showImg);
+			cv::waitKey(5);
+			cv::Mat result;
+			cv::matchTemplate(img1, img2, result, cv::TM_CCOEFF_NORMED);
+			system("cls");
+			printf("Current zncc: %f\n", result.at<float>(0, 0));
+		}
+#else
 		stereoCalibrator.estimate(imgs_c[0], imgs_c[1]);
+#endif
 		SysUtil::sleep(5);
 	}
 
