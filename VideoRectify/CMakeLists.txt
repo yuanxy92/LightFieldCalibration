@@ -27,7 +27,7 @@
 ##               Buddha Bless No Bug
 ##
 
-set(depth_exe_name "DepthEstimation")
+set(depth_exe_name "VideoRectify")
 
 add_executable(${depth_exe_name}
     StereoRectify.h
