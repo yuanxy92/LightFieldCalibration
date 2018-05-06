@@ -50,7 +50,10 @@ int main(int argc, char* argv[]) {
 		}
 		leftOutVideo << left;
 		rightOutVideo << right;
-		if (i % 30 == 0) {
+		if (i % 10 == 0) {
+			cv::Size size(left.cols / 2, left.rows / 2);
+			cv::resize(left, left, size);
+			cv::resize(right, right, size);
 			cv::imwrite(cv::format("data/0/%04d.jpg", ind), left);
 			cv::imwrite(cv::format("data/1/%04d.jpg", ind), right);
 			ind++;
