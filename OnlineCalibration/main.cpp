@@ -92,7 +92,7 @@ int main(int argc, char* argv[]) {
 
 		imgs_d[0].download(imgs_c[0]);
 		imgs_d[1].download(imgs_c[1]);
-#if 0
+#if 1
 		if (nframe == 1) {
 			cv::Mat img;
 			cv::Size sizeSmall(imgs_c[0].cols / 4, imgs_c[0].rows / 4);
@@ -112,6 +112,12 @@ int main(int argc, char* argv[]) {
 			img1.copyTo(showImg(rect2));
 			rect2.x += img1.cols;
 			img2.copyTo(showImg(rect2));
+			cv::line(showImg, cv::Point(0, showImg.rows / 2), 
+				cv::Point(showImg.cols, showImg.rows / 2), cv::Scalar(0, 0, 255), 1, 8, 0);
+			cv::line(showImg, cv::Point(showImg.cols / 4, 0),
+				cv::Point(showImg.cols / 4, showImg.rows), cv::Scalar(0, 0, 255), 1, 8, 0);
+			cv::line(showImg, cv::Point(showImg.cols / 4 * 3, 0),
+				cv::Point(showImg.cols / 4 * 3, showImg.rows), cv::Scalar(0, 0, 255), 1, 8, 0);
 			cv::imshow("calib", showImg);
 			cv::waitKey(5);
 			cv::Mat result;
