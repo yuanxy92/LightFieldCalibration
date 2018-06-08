@@ -118,6 +118,8 @@ int main(int argc, char* argv[]) {
 				cv::Point(showImg.cols / 4, showImg.rows), cv::Scalar(0, 0, 255), 1, 8, 0);
 			cv::line(showImg, cv::Point(showImg.cols / 4 * 3, 0),
 				cv::Point(showImg.cols / 4 * 3, showImg.rows), cv::Scalar(0, 0, 255), 1, 8, 0);
+			cv::resize(showImg, showImg, cv::Size(showImg.size().width * 3,
+				showImg.size().height * 3));
 			cv::imshow("calib", showImg);
 			cv::waitKey(5);
 			cv::Mat result;
