@@ -32,17 +32,30 @@ set(stereo_exe_name "OnlineCalibrate")
 # Camera Driver files
 # camera SDK
 # pointgrey camera sdk
-set(PTGREY_SDK_INCLUDE_DIR "C:/Program Files/Point Grey Research/Spinnaker/include")
-set(PTGREY_SDK_LIBRARY 
-	"C:/Program Files/Point Grey Research/Spinnaker/lib64/vs2015/Spinnaker_v140.lib"
-)
+if ( WIN32 )
+    set(PTGREY_SDK_INCLUDE_DIR "C:/Program Files/Point Grey Research/Spinnaker/include")
+	set(PTGREY_SDK_LIBRARY_DEBUG debug "C:/Program Files/Point Grey Research/Spinnaker/lib64/vs2015/Spinnakerd_v140.lib")
+	set(PTGREY_SDK_LIBRARY_RELEASE  optimized "C:/Program Files/Point Grey Research/Spinnaker/lib64/vs2015/Spinnaker_v140.lib")
+else()
+    set(PTGREY_SDK_INCLUDE_DIR "~/zhu-ty/spinnaker/include")
+    set(PTGREY_SDK_LIBRARY_DEBUG debug "~/zhu-ty/spinnaker/lib/libSpinnaker.so")
+    set(PTGREY_SDK_LIBRARY_RELEASE optimized "~/zhu-ty/spinnaker/lib/libSpinnaker.so")
+endif()
 include_directories(${PTGREY_SDK_INCLUDE_DIR})
+
 # XIMEA camera
-set(XIMEA_SDK_INCLUDE_DIR "C:/XIMEA/API")
-set(XIMEA_SDK_LIBRARY 
-	"C:/XIMEA/API/x64/xiapi64.lib"
-)
+if ( WIN32 )
+    set(XIMEA_SDK_INCLUDE_DIR "C:/XIMEA/API")
+    set(XIMEA_SDK_LIBRARY_DEBUG debug "C:/XIMEA/API/x64/xiapi64.lib")
+    set(XIMEA_SDK_LIBRARY_RELEASE optimized "C:/XIMEA/API/x64/xiapi64.lib")
+else ()
+    set(XIMEA_SDK_INCLUDE_DIR "/opt/XIMEA/include")
+    set(XIMEA_SDK_LIBRARY_DEBUG debug "/usr/lib/libm3api.so")
+    set(XIMEA_SDK_LIBRARY_RELEASE optimized "/usr/lib/libm3api.so")
+endif()
 include_directories(${XIMEA_SDK_INCLUDE_DIR})
+include_directories(${XIMEA_SDK_INCLUDE_DIR})
+
 # General camera driver
 set(CAMERA_DRIVER_DIR ${PROJECT_SOURCE_DIR}/GenCameraDriver)
 set(CAMERA_DRIVER_FILE
@@ -108,6 +121,8 @@ target_link_libraries(${stereo_exe_name}
 	${CUDA_nppitc_LIBRARY}
 	${CUDA_npps_LIBRARY} 
 	# camera libs
-	${PTGREY_SDK_LIBRARY}
-	${XIMEA_SDK_LIBRARY}
+	${PTGREY_SDK_LIBRARY_DEBUG}
+	${PTGREY_SDK_LIBRARY_RELEASE}
+	${XIMEA_SDK_LIBRARY_DEBUG}
+	${XIMEA_SDK_LIBRARY_RELEASE}
 )
