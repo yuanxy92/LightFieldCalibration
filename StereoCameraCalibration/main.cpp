@@ -61,7 +61,7 @@ StereoCalib(const vector<string>& imagelist, Size boardSize, float squareSize, b
         return;
     }
 
-    const int maxScale = 2;
+    const int maxScale = 1;
     // ARRAY AND VECTOR STORAGE:
 
     vector<vector<Point2f> > imagePoints[2];
