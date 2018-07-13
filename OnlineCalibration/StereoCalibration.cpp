@@ -79,101 +79,102 @@ int StereoCalibration::estimate(cv::Mat img1, cv::Mat img2) {
 	// change to gray image
 	cv::cvtColor(img1, this->img1, cv::COLOR_BGR2GRAY);
 	cv::cvtColor(img2, this->img2, cv::COLOR_BGR2GRAY);
-	// find corners in chess board
-	bool isFound1 = cv::findChessboardCorners(img1, chessBoardSize, 
-		corner1, cv::CALIB_CB_ADAPTIVE_THRESH 
-		+ cv::CALIB_CB_FAST_CHECK);
-	if (isFound1) {
-		cv::cornerSubPix(this->img1, corner1, cv::Size(11, 11), cv::Size(-1, -1),
-			cv::TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1));
-	}
-	if (!isFound1) {
+	//// find corners in chess board
+	//bool isFound1 = cv::findChessboardCorners(img1, chessBoardSize, 
+	//	corner1, cv::CALIB_CB_ADAPTIVE_THRESH 
+	//	+ cv::CALIB_CB_FAST_CHECK);
+	//if (isFound1) {
+	//	cv::cornerSubPix(this->img1, corner1, cv::Size(11, 11), cv::Size(-1, -1),
+	//		cv::TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1));
+	//}
+	//if (!isFound1) {
 		cv::Rect rect(0, 0, smallImg1.cols, smallImg1.rows);
 		smallImg1.copyTo(display(rect));
 		rect.x += smallImg1.cols;
 		smallImg2.copyTo(display(rect));
 		cv::imshow("corners", display);
-		cv::waitKey(5);
-		return -1;
-	}
-	bool isFound2 = cv::findChessboardCorners(img2, chessBoardSize,
-		corner2, cv::CALIB_CB_ADAPTIVE_THRESH 
-		+ cv::CALIB_CB_FAST_CHECK);
-	if (isFound2) {
-		cv::cornerSubPix(this->img2, corner2, cv::Size(11, 11), cv::Size(-1, -1),
-			cv::TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1));
-	}
-	if (!isFound2) {
-		cv::Rect rect(0, 0, smallImg1.cols, smallImg1.rows);
-		smallImg1.copyTo(display(rect));
-		rect.x += smallImg1.cols;
-		smallImg2.copyTo(display(rect));
-		cv::imshow("corners", display);
-		cv::waitKey(5);
-		return -1;
-	}
-	// check
-	if (corner1.rows != corner2.rows) {
-		cv::Rect rect(0, 0, smallImg1.cols, smallImg1.rows);
-		smallImg1.copyTo(display(rect));
-		rect.x += smallImg1.cols;
-		smallImg2.copyTo(display(rect));
-		cv::imshow("corners", display);
-		cv::waitKey(5);
-		return -1;
-	}
-	// draw corner points
-	cv::Mat corner1_small, corner2_small;
-	corner1.convertTo(corner1_small, CV_32F, 0.25);
-	corner2.convertTo(corner2_small, CV_32F, 0.25);
-	drawChessboardCorners(smallImg1, chessBoardSize, cv::Mat(corner1_small), isFound1);
-	drawChessboardCorners(smallImg2, chessBoardSize, cv::Mat(corner2_small), isFound2);
-	cv::Rect rect(0, 0, smallImg1.cols, smallImg1.rows);
-	smallImg1.copyTo(display(rect));
-	rect.x += smallImg1.cols;
-	smallImg2.copyTo(display(rect));
-	cv::imshow("corners", display);
-	cv::waitKey(5);
-	if (corner1.rows != 88 || corner2.rows != 88) {
-		return -1;
-	}
-	// calculate rotation matrix
-	cv::Mat R, T;
-	cv::Vec3f angles;
-	cv::Mat E = cv::findEssentialMat(corner1, corner2, this->K1, 0);
-	cv::recoverPose(E, corner1, corner2, this->K1, R, T);
-	angles = rotationMatrixToEulerAngles(R);
-	system("cls");
-	SysUtil::infoOutput("Rotation:");
-	for (int row = 0; row < 3; row++) {
-		for (int col = 0; col < 3; col++) {
-			printf("%06.5lf ", abs(R.at<double>(row, col)));
-		}
-		printf("\n");
-	}
-	SysUtil::infoOutput("Euler Angles:");
-	printf("%06.5lf ", abs(angles.val[0]));
-	printf("%06.5lf ", abs(angles.val[1]));
-	printf("%06.5lf ", abs(angles.val[2]));
-	printf("\n");
-	printf("%06.5lf ", angles.val[0]);
-	printf("%06.5lf ", angles.val[1]);
-	printf("%06.5lf ", angles.val[2]);
-	printf("\n");
-	SysUtil::infoOutput("Translation:");
-	printf("%06.5lf ", T.at<double>(0, 0));
-	printf("%06.5lf ", T.at<double>(0, 1));
-	printf("%06.5lf ", T.at<double>(0, 2));
-	printf("\n");
+		//cv::waitKey(5);
+	//	return -1;
+	//}
+	//bool isFound2 = cv::findChessboardCorners(img2, chessBoardSize,
+	//	corner2, cv::CALIB_CB_ADAPTIVE_THRESH 
+	//	+ cv::CALIB_CB_FAST_CHECK);
+	//if (isFound2) {
+	//	cv::cornerSubPix(this->img2, corner2, cv::Size(11, 11), cv::Size(-1, -1),
+	//		cv::TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1));
+	//}
+	//if (!isFound2) {
+	//	cv::Rect rect(0, 0, smallImg1.cols, smallImg1.rows);
+	//	smallImg1.copyTo(display(rect));
+	//	rect.x += smallImg1.cols;
+	//	smallImg2.copyTo(display(rect));
+	//	cv::imshow("corners", display);
+	//	cv::waitKey(5);
+	//	return -1;
+	//}
+	//// check
+	//if (corner1.rows != corner2.rows) {
+	//	cv::Rect rect(0, 0, smallImg1.cols, smallImg1.rows);
+	//	smallImg1.copyTo(display(rect));
+	//	rect.x += smallImg1.cols;
+	//	smallImg2.copyTo(display(rect));
+	//	cv::imshow("corners", display);
+	//	cv::waitKey(5);
+	//	return -1;
+	//}
+	//// draw corner points
+	//cv::Mat corner1_small, corner2_small;
+	//corner1.convertTo(corner1_small, CV_32F, 0.25);
+	//corner2.convertTo(corner2_small, CV_32F, 0.25);
+	//drawChessboardCorners(smallImg1, chessBoardSize, cv::Mat(corner1_small), isFound1);
+	//drawChessboardCorners(smallImg2, chessBoardSize, cv::Mat(corner2_small), isFound2);
+	//cv::Rect rect(0, 0, smallImg1.cols, smallImg1.rows);
+	//smallImg1.copyTo(display(rect));
+	//rect.x += smallImg1.cols;
+	//smallImg2.copyTo(display(rect));
+	//cv::imshow("corners", display);
+	//cv::waitKey(5);
+	//if (corner1.rows != 88 || corner2.rows != 88) {
+	//	return -1;
+	//}
+	//// calculate rotation matrix
+	//cv::Mat R, T;
+	//cv::Vec3f angles;
+	//cv::Mat E = cv::findEssentialMat(corner1, corner2, this->K1, 0);
+	//cv::recoverPose(E, corner1, corner2, this->K1, R, T);
+	//angles = rotationMatrixToEulerAngles(R);
+	//system("cls");
+	//SysUtil::infoOutput("Rotation:");
+	//for (int row = 0; row < 3; row++) {
+	//	for (int col = 0; col < 3; col++) {
+	//		printf("%06.5lf ", abs(R.at<double>(row, col)));
+	//	}
+	//	printf("\n");
+	//}
+	//SysUtil::infoOutput("Euler Angles:");
+	//printf("%06.5lf ", abs(angles.val[0]));
+	//printf("%06.5lf ", abs(angles.val[1]));
+	//printf("%06.5lf ", abs(angles.val[2]));
+	//printf("\n");
+	//printf("%06.5lf ", angles.val[0]);
+	//printf("%06.5lf ", angles.val[1]);
+	//printf("%06.5lf ", angles.val[2]);
+	//printf("\n");
+	//SysUtil::infoOutput("Translation:");
+	//printf("%06.5lf ", T.at<double>(0, 0));
+	//printf("%06.5lf ", T.at<double>(0, 1));
+	//printf("%06.5lf ", T.at<double>(0, 2));
+	//printf("\n");
 
-	// end recording time
-	tm.stop();
-	std::cout << cv::format("Find corner points, cost %f miliseconds ...", tm.getTimeMilli())
-		<< std::endl;
+	//// end recording time
+	//tm.stop();
+	//std::cout << cv::format("Find corner points, cost %f miliseconds ...", tm.getTimeMilli())
+	//	<< std::endl;
 
 	cv::imwrite(cv::format("images/0/%05d.png", validFrameInd), img1);
 	cv::imwrite(cv::format("images/1/%05d.png", validFrameInd), img2);
 	validFrameInd++;
+	cv::waitKey(1);
 
 	return 0;
 }

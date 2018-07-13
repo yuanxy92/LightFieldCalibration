@@ -92,7 +92,7 @@ int main(int argc, char* argv[]) {
 
 		imgs_d[0].download(imgs_c[0]);
 		imgs_d[1].download(imgs_c[1]);
-#if 1
+#if 0
 		if (nframe == 1) {
 			cv::Mat img;
 			cv::Size sizeSmall(imgs_c[0].cols / 4, imgs_c[0].rows / 4);
